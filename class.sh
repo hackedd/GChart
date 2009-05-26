@@ -3,7 +3,7 @@ class=$1
 type=$2
 
 echo -e "<?php"
-echo -e "\tclass G$class extends GChart"
+echo -e "\tclass $class extends GChart"
 echo -e "\t{"
 echo -e "\t\tpublic function __construct(\$width, \$height)"
 echo -e "\t\t{"

@@ -14,7 +14,7 @@
 	$trans = new GChartColor(0x00, 0x00, 0x00, 0x00);
 	$white = new GChartColor(0xFF, 0xFF, 0xFF);
 	
-	$c = new GLineChart(600, 500);
+	$c = new LineChart(600, 500);
 	
 	$a = array();
 	$b = array();
@@ -77,7 +77,7 @@
 	printf("<h1>LineChart</h1>\n<p>\n%s\n</p>\n\n", $c->Render());
 
 
-	$bc = new GBarChart(1000, 300);
+	$bc = new BarChart(1000, 300);
 	$bc->SetType(GChart::TYPE_BARCHART_V_GROUPED);
 	$bc->AddDataset($a);
 	$bc->AddDataset($b);

@@ -390,7 +390,7 @@
 		{
 			if ($degrees)
 				$value = $value / 180 * M_PI;
-			$value = $value % (M_PI * 2)
+			$value = $value % (M_PI * 2);
 			if ($value < 0)
 				$value += M_PI * 2;
 			$this->pieRotation = $value;
