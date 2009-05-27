@@ -50,7 +50,7 @@
 		{
 			if ($this->type == self::TYPE_SOLID && !($value instanceof GChartColor))
 				throw new Exception("for solid fill, value should be of type GChartColor");
-			else if (count($value) % 2)
+			else if ($this->type != self::TYPE_SOLID && count($value) % 2)
 				throw new Exception("for gradient and stripes, value should contain an even number of items");
 				
 			$this->colors = $value;

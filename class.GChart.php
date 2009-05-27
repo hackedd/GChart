@@ -75,6 +75,13 @@
 		
 		protected $pieRotation = false;
 		
+		protected $qrMargin = 4;
+		protected $qrECLevel = false;
+		protected $qrEncoding = false;
+		
+		protected $mapArea = Map::DEFAULT_AREA;
+		protected $mapCountries = false;
+		
 		public function __construct($type, $width, $height)
 		{
 			$this->SetType($type);
@@ -101,9 +108,9 @@
 		public function SetSize($w, $h)
 		{
 			if ($this->type != self::TYPE_MAP && ($w > self::MAX_SIZE || $h > self::MAX_SIZE || $w * $h > self::MAX_AREA))
-				throw new Exception("Width, Height or Area is out of range");
+				throw new Exception("Chart Width, Height or Area is out of range");
 			if ($this->type == self::TYPE_MAP && ($w > self::MAX_MAP_WIDTH || $h > self::MAX_MAP_HEIGHT))
-				throw new Exception("Width, Height or Area is out of range");
+				throw new Exception("Map Width, Height or Area is out of range");
 			
 			$this->width = $w;
 			$this->height = $h;
@@ -407,8 +414,9 @@
 			$params["chs"] = sprintf("%dx%d", $this->width, $this->height);
 			
 			// Data
-			$params["chd"] = GChartEncoder::Encode($this->encoding, 
-				$this->datasets, $this->scale, $this->margin);
+			if (count($this->datasets) > 0)
+				$params["chd"] = GChartEncoder::Encode($this->encoding, 
+					$this->datasets, $this->scale, $this->margin);
 			
 			// Text Encoding with Data Scaling
 			if ($this->encoding == GChartEncoder::ENCODING_TEXT && $this->textScaling !== false)
@@ -449,10 +457,14 @@
 			// Legend and Legend Position
 			if ($this->legend !== false)
 			{
-				if ($this->type == self::TYPE_PIECHART || $this->type == self::TYPE_PIECHART_3D || $this->type == self::TYPE_GOOGLE_O_METER)
+				$key = "chdl";
+				if ($this->type == self::TYPE_PIECHART || 
+					$this->type == self::TYPE_PIECHART_3D || 
+					$this->type == self::TYPE_PIECHART_CONCENTRIC || 
+					$this->type == self::TYPE_GOOGLE_O_METER || 
+					$this->type == self::TYPE_QR_CODE)
 					$key = "chl";
-				else
-					$key = "chdl";
+				
 				$params[$key] = implode("|", $this->legend);
 				
 				if ($this->legendPosition !== false)
@@ -537,19 +549,28 @@
 			if ($this->pieRotation !== false)
 				$params["chp"] = sprintf("%.2f", $this->pieRotation);
 			
-			/*
-			// Map Area
+			// QR Code EC Level and Encoding
+			if ($this->type == self::TYPE_QR_CODE && $this->qrECLevel !== false)
+				$params["chld"] = sprintf("%s|%d", $this->qrECLevel, $this->qrMargin);
+			if ($this->type == self::TYPE_QR_CODE && $this->qrEncoding !== false)
+				$params["choe"] = $this->qrEncoding;
+			
+			// Map Geographical Area
 			if ($this->type == self::TYPE_MAP)
-				$params["chtm"] = $this->area;
-			if ($this->type == self::TYPE_MAP && count($this->map_areas) > 0)
-				$params["chld"] = implode("", $this->map_areas);
-			*/
+				$params["chtm"] = $this->mapArea;
+			
+			// Map Colored Areas
+			if ($this->type == self::TYPE_MAP && count($this->mapCountries) > 0)
+				$params["chld"] = implode("", $this->mapCountries);
 				
 			return $this->api . "?" . implode("&", array_map(array("GChart", "ParamPair"), array_keys($params), array_values($params)));
 		}
 		
 		public function Render($attributes = false)
 		{
+			if (count($this->datasets) == 0 && $this->type != self::TYPE_QR_CODE)
+				throw new Exception("A GChart must contain at least one dataset");
+			
 			if ($attributes == false)
 				$attributes = array("alt" => "Google Chart Image");
 			
