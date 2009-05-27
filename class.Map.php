@@ -8,6 +8,7 @@
 		{
 			parent::SetType(GChart::TYPE_MAP);
 			parent::SetSize($width, $height);
+			$this->AddFill(new GChartFill(GChartFill::AREA_BACKGROUND, GChartFill::TYPE_SOLID, new GChartColor("EAF7FE")));
 		}
 		
 		public function GetArea()
