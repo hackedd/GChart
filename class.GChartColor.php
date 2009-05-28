@@ -1,6 +1,5 @@
 <?php
-	// http://code.google.com/apis/chart/colors.html
-	class GChartColor
+	class GChartColor extends GetSetter
 	{
 		const TRANSPARENT = 0x00;
 		const OPAQUE = 0xFF;

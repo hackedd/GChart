@@ -1,5 +1,5 @@
 <?php
-	class GChartGrid
+	class GChartGrid extends GetSetter
 	{
 		private $xstep;
 		private $ystep;

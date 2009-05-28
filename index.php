@@ -180,4 +180,8 @@
 	$m->AddFill(new GChartFill(GChartFill::AREA_BACKGROUND, GChartFill::TYPE_SOLID, new GChartColor("EAF7FE")));
 	
 	printf("<h1>Map</h2>\n<p>\n%s\n</p>\n\n", $m->Render());
+	
+	$m = new GoogleMeter(450, 250);
+	$m->value = rand(0, 100);
+	printf("<h2>GoogleMeter GetSetter</h2>\n<p>\n%s\n</p>\n\n", $m->Render());
 ?>

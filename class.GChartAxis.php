@@ -1,5 +1,5 @@
 <?php
-	class GChartAxis
+	class GChartAxis extends GetSetter
 	{
 		const TYPE_X = "x";
 		const TYPE_BOTTOM = self::TYPE_X;

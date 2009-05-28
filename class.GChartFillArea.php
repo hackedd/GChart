@@ -1,5 +1,5 @@
 <?php
-	class GChartFillArea
+	class GChartFillArea extends GetSetter
 	{
 		const MODE_BETWEEN = "b";
 		const MODE_FROM_ZERO = "B";

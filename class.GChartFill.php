@@ -1,5 +1,5 @@
 <?php
-	class GChartFill
+	class GChartFill extends GetSetter
 	{
 		const AREA_BACKGROUND = "bg";
 		const AREA_CHART = "c";

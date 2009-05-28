@@ -1,5 +1,5 @@
 <?php
-	class GChart
+	class GChart extends GetSetter
 	{
 		const GCHART_API_URL = "http://chart.apis.google.com/chart";
 

@@ -1,5 +1,5 @@
 <?php
-	class GChartLineStyle
+	class GChartLineStyle extends GetSetter
 	{
 		private $thickness;
 		private $line;

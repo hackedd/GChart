@@ -1,5 +1,5 @@
 <?php
-	class GChartMarker
+	class GChartMarker extends GetSetter
 	{
 		const TYPE_AT = "@";	// datapoint is coordinates
 		const TYPE_ARROW = "a";
