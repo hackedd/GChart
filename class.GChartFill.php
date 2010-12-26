@@ -77,7 +77,7 @@
 			{
 				$str .= sprintf(",%d", $this->angle);
 				for ($i = 0; $i < count($this->colors); $i += 2)
-					$str .= sprintf(",%s,%.2f", $this->colors[$i], $this->colors[$i + 1]);
+					$str .= sprintf(",%s,%.3f", $this->colors[$i], $this->colors[$i + 1]);
 			}
 			
 			return $str;

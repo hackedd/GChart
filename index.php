@@ -1,11 +1,14 @@
 <?php
 	error_reporting(E_ALL);
 
-	function __autoload($class)
+	if (!defined("GCHART_NO_AUTOLOAD") || !GCHART_NO_AUTOLOAD)
 	{
-		require_once("class." . $class . ".php");
+		function __autoload($class)
+		{
+			require_once("class." . $class . ".php");
+		}
 	}
-	
+		
 	$red = new GChartColor(0xFF, 0x00, 0x00);
 	$blue = new GChartColor(0x00, 0x00, 0xFF);
 	$green = new GChartColor(0x00, 0xFF, 0x00);
