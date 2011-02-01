@@ -23,6 +23,16 @@
 					if (strlen($hex) == 8)
 						$a = hexdec(substr($hex, 6, 2));
 				}
+				else if (strlen($r) == 3 || strlen($r) == 4)
+				{
+					$hex = $r;
+					
+					$r = hexdec($hex[0] . $hex[0]);
+					$g = hexdec($hex[1] . $hex[1]);
+					$b = hexdec($hex[2] . $hex[2]);
+					if (strlen($hex) == 4)
+						$a = hexdec($hex[3] . $hex[3]);
+				}
 				else
 				{
 					$r = 0;
