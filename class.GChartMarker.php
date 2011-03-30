@@ -36,6 +36,7 @@
 		const TYPE_FINANCIAL = "F";
 
 		const TYPE_TEXT = "t";
+		const TYPE_FORMAT = "N";
 		
 		const BOTTOM = -1;
 		const BELOW = self::BOTTOM;
@@ -143,6 +144,11 @@
 		public static function TextType($text)
 		{
 			return self::TYPE_TEXT . $text;
+		}
+		
+		public static function FormatType($format, $prefix = false, $suffix = false)
+		{
+			return self::TYPE_FORMAT . $prefix . "*" . $format . "*" . $suffix;
 		}
 		
 		public static function Every($i = 1, $start = false, $end = false)

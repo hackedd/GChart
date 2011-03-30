@@ -30,6 +30,7 @@
 		const TYPE_BARCHART_V = "bvs";
 		const TYPE_BARCHART_H_GROUPED = "bhg";
 		const TYPE_BARCHART_V_GROUPED = "bvg";
+		const TYPE_BARCHART_V_OVERLAPPED = "bvo";
 		const TYPE_PIECHART = "p";
 		const TYPE_PIECHART_CONCENTRIC = "pc";
 		const TYPE_PIECHART_3D = "p3";
