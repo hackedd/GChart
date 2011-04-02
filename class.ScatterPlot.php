@@ -25,7 +25,6 @@
 		{
 			parent::SetType(GChart::TYPE_SCATTER);
 			parent::SetSize($width, $height);
-			parent::SetMargin(0);
 		}
 
 		public function SetType($value)

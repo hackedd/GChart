@@ -25,7 +25,6 @@
 		{
 			parent::SetType(GChart::TYPE_GOOGLE_O_METER);
 			parent::SetSize($width, $height);
-			parent::SetMargin(0);
 			parent::SetScale(GChartEncoder::SCALE_NONE);
 		}
 		

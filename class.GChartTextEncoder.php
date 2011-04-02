@@ -18,34 +18,33 @@
 		
 		$Id$
 	*/
-
-	class BarChart extends GChart
+	
+	class GChartTextEncoder extends GChartEncoder
 	{
-		public function __construct($width, $height)
+		const TEXT_MIN = 0;
+		const TEXT_MAX = 100;
+		const TEXT_MISSING_VALUE = "-1";
+		const TEXT_MISSING_SET = "_";
+		const TEXT_SET_DELIM = "|";
+				
+		public function __construct($scale, $flags)
 		{
-			parent::SetType(GChart::TYPE_BARCHART_V);
-			parent::SetSize($width, $height);
-			parent::SetBarWidth(GChart::BAR_WIDTH_AUTO);
+			parent::__construct($scale, $flags);
+			$this->min = self::TEXT_MIN;
+			$this->max = self::TEXT_MAX;
+			$this->setDelim = self::TEXT_SET_DELIM;
+			$this->valueDelim = ",";
 		}
 
-		public function SetType($value)
+		public function EncodeValue($value)
 		{
-			if ($value != GChart::TYPE_BARCHART_H && 
-				$value != GChart::TYPE_BARCHART_V && 
-				$value != GChart::TYPE_BARCHART_H_GROUPED && 
-				$value != GChart::TYPE_BARCHART_V_GROUPED)
-				throw new Exception("Invalid Chart Type for BarChart");
-			parent::SetType($value);
-		}
-		
-		public function GetPieRotation()
-		{
-			throw new Exception("BarChart does not support GetPieRotation");
-		}
-		
-		public function SetPieRotation($value)
-		{
-			throw new Exception("BarChart does not support SetPieRotation");
+			if ($value === false)
+				return self::TEXT_MISSING_VALUE;
+			
+			$str = sprintf("%.1f", (float)$value);
+			if (substr($str, -2) == ".0")
+				$str = substr($str, 0, -2);
+			return $str;
 		}
 	}
 ?>

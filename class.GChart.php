@@ -70,7 +70,6 @@
 		protected $datasets = array();
 		protected $encoding = GChartEncoder::ENCODING_TEXT;
 		protected $scale = GChartEncoder::SCALE_ALL;
-		protected $margin = GChartEncoder::DEFAULT_SCALE_MARGIN;
 		protected $textScaling = false;
 		
 		protected $chartColors = array();
@@ -176,15 +175,6 @@
 		public function SetScale($value)
 		{
 			$this->scale = $value;
-		}
-		
-		public function GetMargin()
-		{
-			return $this->margin;
-		}
-		public function SetMargin($value)
-		{
-			$this->margin = $value;
 		}
 		
 		public function GetTextScaling()
@@ -436,8 +426,14 @@
 			
 			// Data
 			if (count($this->datasets) > 0)
+			{
+				/*
 				$params["chd"] = GChartEncoder::Encode($this->encoding, 
 					$this->datasets, $this->scale, $this->margin);
+				*/
+				$encoder = GChartEncoder::GetEncoder($this->encoding, $this->scale);
+				$params["chd"] = $encoder->Encode($this->datasets);
+			}
 			
 			// Text Encoding with Data Scaling
 			if ($this->encoding == GChartEncoder::ENCODING_TEXT && $this->textScaling !== false)

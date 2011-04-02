@@ -25,7 +25,6 @@
 		{
 			parent::SetType(GChart::TYPE_RADAR);
 			parent::SetSize($width, $height);
-			parent::SetMargin(0);
 		}
 
 		public function SetType($value)

@@ -51,9 +51,7 @@
 	$c->AddDataset($a);
 	$c->AddDataset($b);
 	
-	$c->SetEncoding(GChartEncoder::ENCODING_TEXT);
-	$c->SetMargin(0.10);
-	$c->SetScale(GChartEncoder::SCALE_ALL);
+	$c->SetEncoding(GChartEncoder::ENCODING_EXTENDED);
 	
 	// Text Encoding with Scaling
 	//$c->SetScale(GChartEncoder::SCALE_NONE);
@@ -80,7 +78,6 @@
 	$ax->SetTickLength(-$c->GetWidth());
 	$ax->SetRangeStart(-1.5);
 	$ax->SetRangeEnd(1.5);
-	$ax->ExpandRange($c->GetMargin());
 	$ax->SetRangeStep(0.3);
 	$c->AddAxis($ax);
 	

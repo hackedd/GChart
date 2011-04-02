@@ -279,6 +279,5 @@
 		{
 			throw new Exception("QRCode does not support SetPieRotation");
 		}
-
 	}
 ?>

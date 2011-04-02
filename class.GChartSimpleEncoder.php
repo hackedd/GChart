@@ -18,34 +18,31 @@
 		
 		$Id$
 	*/
-
-	class BarChart extends GChart
+	
+	class GChartSimpleEncoder extends GChartEncoder
 	{
-		public function __construct($width, $height)
+		const SIMPLE_CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		const SIMPLE_MIN = 0;
+		const SIMPLE_MAX = 61;
+		const SIMPLE_MISSING_VALUE = "_";
+		const SIMPLE_MISSING_SET = "_";
+		const SIMPLE_SET_DELIM = ",";
+		
+		public function __construct($scale, $flags)
 		{
-			parent::SetType(GChart::TYPE_BARCHART_V);
-			parent::SetSize($width, $height);
-			parent::SetBarWidth(GChart::BAR_WIDTH_AUTO);
+			parent::__construct($scale, $flags);
+			$this->min = self::SIMPLE_MIN;
+			$this->max = self::SIMPLE_MAX;
+			$this->setDelim = self::SIMPLE_SET_DELIM;
+			$this->valueDelim = "";
 		}
 
-		public function SetType($value)
+		public function EncodeValue($value)
 		{
-			if ($value != GChart::TYPE_BARCHART_H && 
-				$value != GChart::TYPE_BARCHART_V && 
-				$value != GChart::TYPE_BARCHART_H_GROUPED && 
-				$value != GChart::TYPE_BARCHART_V_GROUPED)
-				throw new Exception("Invalid Chart Type for BarChart");
-			parent::SetType($value);
-		}
-		
-		public function GetPieRotation()
-		{
-			throw new Exception("BarChart does not support GetPieRotation");
-		}
-		
-		public function SetPieRotation($value)
-		{
-			throw new Exception("BarChart does not support SetPieRotation");
+			if ($value === false)
+				return self::SIMPLE_MISSING_VALUE;
+			
+			return substr(self::SIMPLE_CHARSET, $value, 1);
 		}
 	}
 ?>
