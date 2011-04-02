@@ -44,12 +44,16 @@
 		const EXTENDED_MISSING_VALUE = "__";
 		const EXTENDED_MISSING_SET = "_";
 		
-		const DEFAULT_SCALE_MARGIN = 0.05; // 5%
+		const DEFAULT_SCALE_MARGIN = 0.00;
 		
 		const SCALE_ALL = 0;			// all sets are scaled to $min,$max, global min/max
 		const SCALE_ODD = 1;			// only sets 1,3,... scaled, global min/max
 		const SCALE_INDIVIDUAL = 2;		// all sets are scaled to $min,$max, individual min/max
 		const SCALE_NONE = 50;			// do not scale
+		
+		const SCALE_FLAG_MASK	= 0xFF00;
+		const SCALE_FLAG_ROUND = 0x0100; // expand max to a multiple of 10 before scaling
+		const SCALE_FLAG_MIN_0  = 0x0200; // $min is zero for all sets
 		
 		/*
 			$index is the number of data series that are used to draw 
@@ -62,15 +66,15 @@
 		}
 		
 		public static function ScaleSet($dataset, $scaleMin, $scaleMax, 
-			$margin = self::DEFAULT_SCALE_MARGIN, $setMin = false, $setMax = false)
+			$margin = self::DEFAULT_SCALE_MARGIN, $setMin, $setMax, $flags)
 		{
 			$tempSetMin = $setMin;
 			$tempSetMax = $setMax;
 			
 			if ($setMin === false)
-				$tempSetMin = min($dataset);
+				$tempSetMin = ($flags & self::SCALE_FLAG_MIN_0) ? 0 : min($dataset);
 			if ($setMax === false)
-				$tempSetMax = max($dataset);
+				$tempSetMax = ($flags & self::SCALE_FLAG_ROUND) ? self::ScaleUp(max($dataset)) : max($dataset);
 
 			$tempMargin = $margin * ($tempSetMax - $tempSetMin);
 			
@@ -105,13 +109,13 @@
 		}
 			
 		public static function TextEncodeSet($dataset, $scale = true, 
-			$min = false, $max = false, $margin = self::DEFAULT_SCALE_MARGIN)
+			$min = false, $max = false, $margin = self::DEFAULT_SCALE_MARGIN, $flags)
 		{
 			if ($dataset === false)
 				return self::TEXT_MISSING_SET;
 			
 			if ($scale)
-				$dataset = self::ScaleSet($dataset, self::TEXT_MIN, self::TEXT_MAX, $margin, $min, $max);
+				$dataset = self::ScaleSet($dataset, self::TEXT_MIN, self::TEXT_MAX, $margin, $min, $max, $flags);
 			
 			return implode(",", array_map(array("self", "TextEncodeValue"), $dataset));
 		}
@@ -125,13 +129,13 @@
 		}
 		
 		public static function SimpleEncodeSet($dataset, $scale = true, 
-			$min = false, $max = false, $margin = self::DEFAULT_SCALE_MARGIN)
+			$min = false, $max = false, $margin = self::DEFAULT_SCALE_MARGIN, $flags)
 		{
 			if ($dataset === false)
 				return self::SIMPLE_MISSING_SET;
 			
 			if ($scale)
-				$dataset = self::ScaleSet($dataset, self::SIMPLE_MIN, self::SIMPLE_MAX, $margin, $min, $max);
+				$dataset = self::ScaleSet($dataset, self::SIMPLE_MIN, self::SIMPLE_MAX, $margin, $min, $max, $flags);
 			
 			return implode("", array_map(array("self", "SimpleEncodeValue"), $dataset));
 		}
@@ -146,20 +150,29 @@
 		}
 		
 		public static function ExtendedEncodeSet($dataset, $scale = true, 
-			$min = false, $max = false, $margin = self::DEFAULT_SCALE_MARGIN)
+			$min = false, $max = false, $margin = self::DEFAULT_SCALE_MARGIN, $flags)
 		{
 			if ($dataset === false)
 				return self::EXTENDED_MISSING_SET;
 			
 			if ($scale)
-				$dataset = self::ScaleSet($dataset, self::EXTENDED_MIN, self::EXTENDED_MAX, $margin, $min, $max);
+				$dataset = self::ScaleSet($dataset, self::EXTENDED_MIN, self::EXTENDED_MAX, $margin, $min, $max, $flags);
 			
 			return implode("", array_map(array("self", "ExtendedEncodeValue"), $dataset));
+		}
+		
+		public static function ScaleUp($value)
+		{
+			$base = pow(10, floor(log($value, 10)));
+			return ceil($value / $base) * $base;
 		}
 		
 		public static function Encode($encoding, $datasets, $scale = self::SCALE_ALL, 
 			$margin = self::DEAULT_SCALE_MARGIN)
 		{
+			$flags = $scale & self::SCALE_FLAG_MASK;
+			$scale = $scale & ~self::SCALE_FLAG_MASK;
+
 			if ($scale == self::SCALE_ALL)
 			{
 				$globalMin = min(array_map("min", $datasets));
@@ -181,6 +194,11 @@
 				$globalMin -= $m;
 				$globalMax += $m;
 			}			
+			
+			if ($flags & self::SCALE_FLAG_MIN_0)
+				$globalMin = 0;
+			if ($flags & self::SCALE_FLAG_ROUND)
+				$globalMax = self::ScaleUp($globalMax);
 			
 			if ($encoding[0] == self::ENCODING_TEXT)
 			{
@@ -206,11 +224,11 @@
 			for ($i = 0; $i < count($datasets); $i += 1)
 			{
 				if ($scale == self::SCALE_ALL || ($scale == self::SCALE_ODD && ($i % 2) == 0))
-					$encoded[$i] = call_user_func($encodeSet, $datasets[$i], true, $globalMin, $globalMax, false);
+					$encoded[$i] = call_user_func($encodeSet, $datasets[$i], true, $globalMin, $globalMax, false, $flags);
 				else if ($scale == self::SCALE_INDIVIDUAL)
-					$encoded[$i] = call_user_func($encodeSet, $datasets[$i], true, false, false, $margin);
+					$encoded[$i] = call_user_func($encodeSet, $datasets[$i], true, false, false, $margin, $flags);
 				else
-					$encoded[$i] = call_user_func($encodeSet, $datasets[$i], false, false, false, false);
+					$encoded[$i] = call_user_func($encodeSet, $datasets[$i], false, false, false, false, $flags);
 			}
 			
 			return $encoding . ":" . implode($setDelim, $encoded);				
