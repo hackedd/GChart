@@ -42,6 +42,8 @@
 		protected $min, $max;
 		protected $setDelim, $valueDelim;
 		
+		public $globalMin, $globalMax;
+		
 		protected function __construct($scale, $flags)
 		{
 			$this->scale = $scale;
@@ -72,10 +74,13 @@
 				$globalMin = 0;
 			if ($this->flagRound)
 			{
-				$globalMax = self::RoundUp($setMax);
+				$globalMax = self::RoundUp($globalMax);
 				if ($globalMin > 0)
 					$globalMin = self::RoundDown($globalMin, $globalMax);
 			}
+			
+			$this->globalMin = $globalMin;
+			$this->globalMax = $globalMax;
 			
 			$encoded = array();
 			for ($i = 0, $c = count($datasets); $i < $c; $i += 1)
@@ -152,7 +157,7 @@
 			if ($max == false)
 				$max = $value;
 				
-			$base = pow(10, floor(log($max, 10)));
+			$base = (int)pow(10, floor(log($max, 10)));
 			return ceil($value / $base) * $base;
 		}
 
@@ -161,7 +166,7 @@
 			if ($max == false)
 				$max = $value;
 				
-			$base = pow(10, floor(log($max, 10)));
+			$base = (int)pow(10, floor(log($max, 10)));
 			return floor($value / $base) * $base;
 		}
 	}

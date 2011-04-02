@@ -427,10 +427,6 @@
 			// Data
 			if (count($this->datasets) > 0)
 			{
-				/*
-				$params["chd"] = GChartEncoder::Encode($this->encoding, 
-					$this->datasets, $this->scale, $this->margin);
-				*/
 				$encoder = GChartEncoder::GetEncoder($this->encoding, $this->scale);
 				$params["chd"] = $encoder->Encode($this->datasets);
 			}
@@ -511,6 +507,20 @@
 					
 					if ($axis->GetRangeStart() !== false)
 					{
+						if ($axis->GetRangeStart() == GChartAxis::RANGE_AUTO)
+						{
+							$min = $encoder->globalMin;
+							$max = $encoder->globalMax;
+							$numsteps = $axis->GetRangeStep();
+							if ($numsteps === false)
+								$numsteps = 10;
+							$step = ($max - $min) / $numsteps;
+							
+							$axis->SetRangeStart($min);
+							$axis->SetRangeEnd($max);
+							$axis->SetRangeStep($step);
+						}
+						
 						$range = sprintf("%d,%.1f,%.1f", $i, $axis->GetRangeStart(), $axis->GetRangeEnd());
 						if ($axis->GetRangeStep() !== false)
 							$range .= sprintf(",%.1f", $axis->GetRangeStep());

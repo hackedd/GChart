@@ -28,6 +28,8 @@
 		const TYPE_LEFT = self::TYPE_Y;
 		const TYPE_RIGHT = "r";
 		
+		const RANGE_AUTO = -1;
+		
 		const ALIGN_LEFT = -1;
 		const ALIGN_CENTER = 0;
 		const ALIGN_RIGHT = 1;
