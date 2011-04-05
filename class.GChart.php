@@ -86,7 +86,7 @@
 		protected $grid = false;
 		protected $markers = array();
 		
-		protected $lineStyles = false;
+		protected $lineStyles = array();
 		
 		protected $barWidth = false;
 		protected $barSpace = false;
@@ -363,6 +363,10 @@
 		{
 			$this->lineStyles = $value;
 		}
+		public function AddLineStyle($value)
+		{
+			$this->lineStyles[] = $value;
+		}
 		
 		public function GetBarWidth()
 		{
@@ -547,7 +551,7 @@
 				$params["chg"] = $this->grid;
 			
 			// Line Styles
-			if ($this->lineStyles != false)
+			if (count($this->lineStyles) > 0)
 				$params["chls"] = implode("|", $this->lineStyles);
 			
 			// Bar Width & Spacing
