@@ -43,7 +43,7 @@
 			throw new Exception("BarChart does not support GetPieRotation");
 		}
 		
-		public function SetPieRotation($value)
+		public function SetPieRotation($value, $degrees = false)
 		{
 			throw new Exception("BarChart does not support SetPieRotation");
 		}

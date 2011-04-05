@@ -19,7 +19,7 @@
 		$Id$
 	*/
 
-	error_reporting(E_ALL);
+	error_reporting(E_ALL | E_STRICT);
 
 	if (!defined("GCHART_NO_AUTOLOAD") || !GCHART_NO_AUTOLOAD)
 	{
@@ -174,7 +174,7 @@
 	$pc->AddDataset($a);
 	
 	$pc->SetLegend(array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"));
-	//$pc->SetPieRotation(rand(0, 360));
+	$pc->SetPieRotation(rand(0, 360));
 	printf("<h1>PieChart</h2>\n<p>\n%s\n</p>\n\n", $pc->Render());
 	
 	$gm = new GoogleMeter(450, 250);
@@ -201,7 +201,9 @@
 	
 	printf("<h1>Map</h2>\n<p>\n%s\n</p>\n\n", $m->Render());
 	
+	/*
 	$m = new GoogleMeter(450, 250);
 	$m->value = rand(0, 100);
 	printf("<h2>GoogleMeter GetSetter</h2>\n<p>\n%s\n</p>\n\n", $m->Render());
+	*/
 ?>

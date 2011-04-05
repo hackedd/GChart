@@ -54,7 +54,7 @@
 		
 		public function Encode($datasets)
 		{
-			if ($this->scale == self::SCALE_ALL)
+			if ($this->scale == self::SCALE_ALL || $this->scale == self::SCALE_NONE)
 			{
 				$globalMin = min(array_map("min", $datasets));
 				$globalMax = max(array_map("max", $datasets));
