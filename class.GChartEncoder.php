@@ -34,11 +34,13 @@
 		const SCALE_FLAG_MASK = 0xFF00;
 		const SCALE_FLAG_ROUND = 0x0100;	// round min and max to round numbers
 		const SCALE_FLAG_MIN_0 = 0x0200;	// $min is zero for all sets
-
+		const SCALE_FLAG_MAX_TOTAL = 0x0400; // $max is total of all data
+		
 		protected $encoding;
 		protected $scale;
 		protected $flagRound;
 		protected $minZero;
+		protected $maxTotal;
 		protected $min, $max;
 		protected $setDelim, $valueDelim;
 		
@@ -50,6 +52,7 @@
 			
 			$this->flagRound = (bool)($flags & self::SCALE_FLAG_ROUND);
 			$this->minZero = (bool)($flags & self::SCALE_FLAG_MIN_0);
+			$this->maxTotal = (bool)($flags & self::SCALE_FLAG_MAX_TOTAL);
 		}
 		
 		public function Encode($datasets)
@@ -72,6 +75,8 @@
 			
 			if ($this->minZero)
 				$globalMin = 0;
+			if ($this->maxTotal)
+				$globalMax = array_sum(array_map("max", $datasets));
 			if ($this->flagRound)
 			{
 				$globalMax = self::RoundUp($globalMax);

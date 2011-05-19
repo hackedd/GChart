@@ -25,6 +25,8 @@
 		{
 			parent::SetType(GChart::TYPE_PIECHART);
 			parent::SetSize($width, $height);
+			
+			$this->scale |= (GChartEncoder::SCALE_FLAG_MIN_0 | GChartEncoder::SCALE_FLAG_MAX_TOTAL);
 		}
 
 		public function SetType($value)

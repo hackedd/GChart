@@ -34,6 +34,7 @@
 		const TYPE_RANGE_H = "r";
 		const TYPE_RANGE_V = "R";
 		const TYPE_FINANCIAL = "F";
+		const TYPE_LINE = "D";
 
 		const TYPE_TEXT = "t";
 		const TYPE_FORMAT = "N";

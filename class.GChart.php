@@ -68,6 +68,7 @@
 		
 		// http://code.google.com/apis/chart/formats.html
 		protected $datasets = array();
+		protected $datasetProperties = array();
 		protected $encoding = GChartEncoder::ENCODING_TEXT;
 		protected $scale = GChartEncoder::SCALE_ALL;
 		protected $textScaling = false;
@@ -81,6 +82,8 @@
 		protected $titleSize = false;
 		protected $legend = false;
 		protected $legendPosition = false;
+		
+		protected $pieLabels = true;
 		
 		protected $axis = array();
 		protected $grid = false;
@@ -150,13 +153,20 @@
 		{
 			$idx = count($this->datasets);
 			$this->datasets[$idx] = $dataset;
+			$this->datasetProperties[$idx] = array("visible" => true);
 			return $idx;
 		}
 		public function RemoveDataset($index)
 		{
 			if ($index < 0 || $index > count($this->datasets))
 				throw new Exception("The dataset index is out of range");
-			return array_splice($this->datasets, $index, 1);
+			array_splice($this->datasets, $index, 1);
+			array_splice($this->datasetProperties, $index, 1);
+		}
+		
+		public function SetDatasetVisible($index, $value)
+		{
+			$this->datasetProperties[$index]["visible"] = $value;
 		}
 		
 		public function GetEncoding()
@@ -300,6 +310,15 @@
 			$this->legendPosition = $value;
 		}
 		
+		public function GetPieLabels()
+		{
+			return $this->pieLabels;
+		}
+		public function SetPieLabels($value)
+		{
+			$this->pieLabels = $value;
+		}
+		
 		public function GetAxisCount()
 		{
 			return count($this->axis);
@@ -433,6 +452,20 @@
 			{
 				$encoder = GChartEncoder::GetEncoder($this->encoding, $this->scale);
 				$params["chd"] = $encoder->Encode($this->datasets);
+				
+				$visible = 0;
+				foreach ($this->datasetProperties as $index => $properties)
+				{
+					if (!$properties["visible"])
+						break;
+					$visible += 1;
+				}
+				
+				if ($visible < count($this->datasets))
+				{
+					// "t" COLON DATA => "t" NUM_VISIBLE COLON DATA
+					$params["chd"] = substr($params["chd"], 0, 1) . $visible . substr($params["chd"], 1);
+				}
 			}
 			
 			// Text Encoding with Data Scaling
@@ -475,12 +508,15 @@
 			if ($this->legend !== false)
 			{
 				$key = "chdl";
-				if ($this->type == self::TYPE_PIECHART || 
-					$this->type == self::TYPE_PIECHART_3D || 
-					$this->type == self::TYPE_PIECHART_CONCENTRIC || 
-					$this->type == self::TYPE_GOOGLE_O_METER || 
-					$this->type == self::TYPE_QR_CODE)
+				if ($this->pieLabels && 
+					($this->type == self::TYPE_PIECHART || 
+						$this->type == self::TYPE_PIECHART_3D || 
+						$this->type == self::TYPE_PIECHART_CONCENTRIC || 
+						$this->type == self::TYPE_GOOGLE_O_METER || 
+						$this->type == self::TYPE_QR_CODE))
+				{
 					$key = "chl";
+				}
 				
 				$params[$key] = implode("|", $this->legend);
 				
