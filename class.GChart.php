@@ -560,11 +560,41 @@
 							$axis->SetRangeEnd($max);
 							$axis->SetRangeStep($step);
 						}
-						
-						$range = sprintf("%d,%.1f,%.1f", $i, $axis->GetRangeStart(), $axis->GetRangeEnd());
-						if ($axis->GetRangeStep() !== false)
-							$range .= sprintf(",%.1f", $axis->GetRangeStep());
-						$ranges[] = $range;
+
+						if ($axis->GetRangeFormat() !== false)
+						{
+							if (($step = $axis->GetRangeStep()) == false)
+								$step = 1;
+							$rangeValues = range($axis->GetRangeStart(), $axis->GetRangeEnd(), $step);
+							
+							$formatCallback = $axis->GetRangeFormat();
+							if (!is_callable($formatCallback))
+							{
+								if (strpos($formatCallback, "\$v") !== false)
+								{
+									if (strpos($formatCallback, "return") === false)
+										$formatCallback = "return " . $formatCallback;
+									if (strpos($formatCallback, -1) != ";")
+										$formatCallback .= ";";
+										
+									$formatCallback = create_function("\$v", $formatCallback);
+								}
+								else
+								{
+									$formatCallback = create_function("\$v", "return sprintf(" . var_export($formatCallback, 1) . ", \$v);");
+								}
+							}
+							
+							$rangeLabels = array_map($formatCallback, $rangeValues);
+							$labels[] = sprintf("%d:|%s", $i, implode("|", $rangeLabels));
+						}
+						else
+						{
+							$range = sprintf("%d,%.1f,%.1f", $i, $axis->GetRangeStart(), $axis->GetRangeEnd());
+							if ($axis->GetRangeStep() !== false)
+								$range .= sprintf(",%.1f", $axis->GetRangeStep());
+							$ranges[] = $range;
+						}
 					}
 					
 					if (($style = $axis->GetStyleString()) !== false)

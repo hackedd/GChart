@@ -46,6 +46,7 @@
 		private $rangeStart = false;
 		private $rangeEnd = false;
 		private $rangeStep = false;
+		private $rangeFormat = false;
 		
 		private $color = false;
 		private $size = false;
@@ -111,6 +112,15 @@
 		public function SetRangeStep($value)
 		{
 			$this->rangeStep = $value;
+		}
+		
+		public function GetRangeFormat()
+		{
+			return $this->rangeFormat;
+		}
+		public function SetRangeFormat($value)
+		{
+			$this->rangeFormat = $value;
 		}
 		
 		public function ExpandRange($margin = GChartEncoder::DEFAULT_SCALE_MARGIN)
