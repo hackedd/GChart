@@ -507,15 +507,17 @@
 			// Legend and Legend Position
 			if ($this->legend !== false)
 			{
-				$key = "chdl";
-				if ($this->pieLabels && 
-					($this->type == self::TYPE_PIECHART || 
+				if ((($this->type == self::TYPE_PIECHART || 
 						$this->type == self::TYPE_PIECHART_3D || 
-						$this->type == self::TYPE_PIECHART_CONCENTRIC || 
-						$this->type == self::TYPE_GOOGLE_O_METER || 
-						$this->type == self::TYPE_QR_CODE))
+						$this->type == self::TYPE_PIECHART_CONCENTRIC) && $this->pieLabels) ||
+					$this->type == self::TYPE_GOOGLE_O_METER || 
+					$this->type == self::TYPE_QR_CODE)
 				{
 					$key = "chl";
+				}
+				else
+				{
+					$key = "chdl";
 				}
 				
 				$params[$key] = implode("|", $this->legend);
